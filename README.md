@@ -1,3 +1,11 @@
+git add .
+git commit -m '信息'
+git push origin master
+
+git pull origin master
+
+
+
 ## 目录结构
 
 ```
