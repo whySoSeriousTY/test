@@ -1,0 +1,36 @@
+.sidebar
+  width 240px
+  height 100%
+  overflow-x hidden
+  overflow-y hidden
+  margin-top -4px
+  &.fold
+    width 80px
+    .ant-menu-item
+      display inherit
+      align-items center
+      a
+        flex none
+// 样式覆盖
+  .ant-menu-item
+    display flex
+    align-items center
+    a
+      flex 1
+  .ant-menu-inline,
+  .ant-menu-vertical
+    border-right 0 none
+  a,
+  .ant-menu-item-selected,
+  .ant-menu-submenu-title:hover
+    color rgba(0, 0, 0, 0.65)
+    text-decoration none
+
+.sidebar-bottom
+  height 50px
+  line-height 50px
+  border-top 1px solid #d5d5d5
+  text-align center
+  label
+    padding 16px 33px
+    cursor pointer

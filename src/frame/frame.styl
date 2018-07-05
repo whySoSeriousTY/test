@@ -1,0 +1,16 @@
+#root
+  width 100%
+  height 100%
+.frame
+  min-width 1200px
+  height 100%
+.frame-main
+  @extend .frame
+  /.main-col
+    height 100%
+    overflow-y auto
+    background-color rgba(0, 0, 255, .5)
+  /.sidebar-col
+    @extend .main-col
+    background-color #fff
+    border-right 1px solid #e9e9e9
