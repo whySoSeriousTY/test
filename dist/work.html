@@ -1,0 +1,241 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>HelloWorld</title>
+</head>
+
+<body>
+
+    <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+
+
+
+    <style>
+        .xAxis path,
+        .xAxis line {
+            fill: none;
+            stroke: gray;
+            shape-rendering: crispEdges;
+        }
+
+        .xAxis text {
+            font-family: sans-serif;
+            font-size: 11px;
+        }
+
+        .MyText,
+        .leftText {
+            font-size: 12px;
+        }
+
+        .title {
+            text-color: white;
+        }
+
+        svg {
+            background: rgb(38, 23, 47)
+        }
+    </style>
+    <script>
+
+
+
+        var height = 360
+        var width = 640
+
+        var svg = d3.selectAll("body")
+            .append("svg")
+            .attr("width", 640)
+            .attr("height", 600)
+        var padding = { left: 30, right: 30, top: 100, bottom: 20 }
+
+
+        var data = [243, 202, 526, 218, 301, 256, 189]
+        var yData = [500, 1000, 1500, 2000]
+
+
+        var xScale = d3.scale.ordinal()
+            .range([70, 150, 230, 310, 390, 470, 550])
+            .domain(['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'])
+
+
+
+        var yScale = d3.scale.linear()
+            .domain([0, d3.sum(data)])
+            .range([0, height - padding.top - padding.bottom])
+
+        var xAxis = d3.svg.axis()
+            .scale(xScale)
+            .orient("bottom")
+
+        var yAxis = d3.svg.axis()
+            .scale(yScale)
+            .orient("left")
+
+        var rectPadding = 60
+        var rectWidth = 20
+
+        var yellow = d3.rgb(255, 255, 0)
+        var blue = d3.rgb(0, 0, 255)
+        var green = d3.rgb(0, 128, 0)
+
+
+        var xres = d3.interpolate(green, blue)
+
+
+
+
+
+        var ycolorlinear = d3.scale.linear()
+            .domain([0, 600])
+            .range([0, 1])
+
+        var xcolorlinear = d3.scale.linear()
+            .domain([0, 7])
+            .range([0, 1])
+
+
+
+
+       
+        var rects =function(){
+            svg.selectAll(".MyRect")
+            .data(data)
+            .enter()
+            .append("rect")
+            .attr("class", "MyRect")
+            .attr("transform", "translate(" + padding.left + "," + padding.top + ")")
+            .attr("x", function (d, i) {
+                return rectPadding + (rectPadding + rectWidth) * i
+            })
+            .attr("y", function (d, i) {
+                var sum = 0
+                for (j = i - 1; j >= 0; j -= 1) {
+                    sum = sum + data[j]
+                }
+                return height - padding.top - padding.bottom - yScale(d) - yScale(sum)
+            })
+            .attr("width", rectWidth)
+            .attr("height", function (d, i) {
+                return yScale(d)
+            })
+            .attr("fill", function (d, i) {
+                var oneres = xres(xcolorlinear(i))
+                var yres = d3.interpolate(oneres, yellow)
+
+                var twores = yres(ycolorlinear(d))
+                return twores.toString()
+            })
+        }
+        rects()
+        
+        var texts =function(){
+             svg.selectAll(".MyText")
+            .data(data)
+            .enter()
+            .append("text")
+            .attr("class", "MyText")
+            .attr("transform", "translate(" + padding.left + "," + padding.top + ")")
+            .attr("x", function (d, i) {
+                return rectPadding + (rectPadding + rectWidth) * i
+            })
+            .attr("y", function (d, i) {
+                var sum = 0
+                for (j = i - 1; j >= 0; j -= 1) {
+                    sum = sum + data[j]
+                }
+                return height - padding.top - padding.bottom - yScale(d) - yScale(sum)
+            })
+            .attr("dx", -1)
+            .attr("dy", -2)
+            .text(function (d) {
+                return d;
+            })
+            .attr("fill", "gray")
+        }
+        texts()
+        svg.append("g")
+            .attr("class", "xAxis")
+            .attr("transform", "translate(" + padding.left + "," + (height - padding.bottom) + ")")
+            .call(xAxis)
+            .attr("fill", "gray")
+
+
+
+
+        var line = svg.selectAll(".line")
+            .data(yData)
+            .enter()
+            .append("line")
+            .attr("x1", padding.left)
+            .attr("y1", function (d, i) {
+                return height - yScale(d) - padding.top - padding.bottom
+            })
+            .attr("x2", width - padding.right)
+            .attr("y2", function (d, i) {
+                return height - yScale(d) - padding.top - padding.bottom
+            })
+            .attr("transform", "translate(0," + padding.top + ")")
+            .attr("stroke", "gray")
+            .attr("stroke-dasharray", "3,3")
+            .attr("stroke-width", 1);
+
+        var leftText = svg.selectAll(".leftText")
+            .data(yData)
+            .enter()
+            .append("text")
+            .attr("class", "leftText")
+            .attr("transform", "translate(0," + padding.top + ")")
+            .attr("x", padding.left)
+            .attr("y", function (d, i) {
+                return height - yScale(d) - padding.top - padding.bottom - 2
+            })
+            .text(function (d) {
+                return d
+            })
+            .attr("fill", "gray")
+
+
+
+        var title = svg.append("text")
+            .attr("class", "title")
+            .attr("x", padding.left)
+            .attr("y", padding.top - 30)
+            .text("新增用户数（天）")
+            .attr("fill", "rgb(182,175,188)")
+
+
+
+
+       var int=self.setInterval("clock()",50)
+        function clock()
+        {
+            svg.selectAll(".MyRect")
+                .remove()
+            rects()
+            svg.selectAll(".MyText")
+                .remove()
+            texts()
+
+        }
+        
+        
+
+
+
+
+    </script>
+
+    <script>
+        const dataChange = () => {
+            data = data.map(item => {
+                return item - 10
+            })
+
+        }
+    </script>
+    <button onclick='dataChange()'>button</button>
+</body>
+
+</html>
