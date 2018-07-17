@@ -1,0 +1,44 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>graphLine</title>
+</head>
+
+<body>
+
+    <script src="./d3.js" charset="utf-8"></script>
+
+    <script>
+        
+
+    </script>
+
+
+
+    <script>
+        const dataChange = () => {
+            var dataOld = activeCompany
+            activeCompany = activeCompany.map(item => {
+                item.value -= 1
+                return item
+            })
+            activeCompany.push({
+                name: "公司名称",
+                value: (Math.random() * 10 + 20).toFixed(2)
+            })
+            activeCompany.sort(
+            (a, b) => {
+                return b.value - a.value;
+            }
+        )
+            activeCompany.shift()
+            companyNames(dataOld)
+            rects(dataOld)
+            Numbers(dataOld)
+        }
+    </script>
+    <button onclick='dataChange()'>button</button>
+</body>
+
+</html>
